@@ -1,9 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import CameraPage from './pages/camera/CameraPage';
 
 const App = () => {
-    return <CameraPage />;
+    return <>main</>;
 };
 
 export default App;

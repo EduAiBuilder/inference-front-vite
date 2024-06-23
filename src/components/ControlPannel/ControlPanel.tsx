@@ -1,6 +1,6 @@
 import { ChangeFacingCameraButton, Control, ImagePreview, TakePhotoButton, TorchButton } from './ControlPanel.style';
 import { ControlPanelPropsInterface } from './ControlPanelProps.interface';
-import * as React from 'react';
+import React from 'react';
 
 const ControlPanel = ({
     setActiveDeviceId,

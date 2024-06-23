@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import * as React from "react";
 import { Camera, CameraType } from '../../Camera';
 import styled from 'styled-components';
 import ControlPanel from '../../components/ControlPannel/ControlPanel';
 import { getClassificationData } from '../../clients/classification.client';
+import React from 'react';
 
 const Wrapper = styled.div`
     position: fixed;
