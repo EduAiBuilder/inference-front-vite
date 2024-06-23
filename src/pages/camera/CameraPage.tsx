@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Camera, CameraType } from '../../Camera';
+import { Camera, CameraType } from '../../camera';
 import styled from 'styled-components';
 import ControlPanel from '../../components/ControlPannel/ControlPanel';
 import { getClassificationData } from '../../clients/classification.client';
 import React from 'react';
+import {useSearchParams} from "react-router-dom";
 
 const Wrapper = styled.div`
     position: fixed;
@@ -49,6 +50,9 @@ async function decodeAndSendBase64Image(base64Str: string) {
     return formData;
 }
 const CameraPage = () => {
+    const [searchParams] = useSearchParams();
+
+    const model = searchParams.get('model');
     const [numberOfCameras, setNumberOfCameras] = useState(0);
     const [image, setImage] = useState<string | null>(null);
     const [showImage, setShowImage] = useState<boolean>(false);
@@ -60,7 +64,7 @@ const CameraPage = () => {
     const handelPictureTaken = async (image: string) => {
         setImage(image);
         const formData = await decodeAndSendBase64Image(image);
-        const response = await getClassificationData(formData);
+        const response = await getClassificationData(formData, model);
         console.log(response);
     };
 
