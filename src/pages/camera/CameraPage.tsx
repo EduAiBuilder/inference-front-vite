@@ -1,31 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
-import { Camera, CameraType } from '../../camera';
+import React, {useEffect, useRef, useState} from 'react';
+import {Camera, CameraType} from '../../camera';
 import styled from 'styled-components';
 import ControlPanel from '../../components/ControlPannel/ControlPanel';
-import { getClassificationData } from '../../clients/classification.client';
-import React from 'react';
+import {getClassificationData} from '../../clients/classification.client';
 import {useSearchParams} from "react-router-dom";
 
 const Wrapper = styled.div`
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 `;
 
 const FullScreenImagePreview = styled.div<{ image: string | null }>`
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    position: absolute;
-    background-color: black;
-    ${({ image }) => (image ? `background-image:  url(${image});` : '')}
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  position: absolute;
+  background-color: black;
+  ${({image}) => (image ? `background-image:  url(${image});` : '')}
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
-async function decodeAndSendBase64Image(base64Str: string) {
+async function decodeAndSendBase64Image(base64Str: string,modelId: string): Promise<FormData> {
     // Strip the header (e.g., "data:image/jpeg;base64,")
     const base64Header = 'data:image/jpeg;base64,';
     if (base64Str.startsWith(base64Header)) {
@@ -39,16 +38,18 @@ async function decodeAndSendBase64Image(base64Str: string) {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'image/jpeg' });
+    const blob = new Blob([byteArray], {type: 'image/jpeg'});
 
     // Create a File object from the blob
-    const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+    const file = new File([blob], 'image.jpg', {type: 'image/jpeg'});
 
     // Create FormData and append the file
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('modelId', modelId.toString());
     return formData;
 }
+
 const CameraPage = () => {
     const [searchParams] = useSearchParams();
 
@@ -63,7 +64,8 @@ const CameraPage = () => {
 
     const handelPictureTaken = async (image: string) => {
         setImage(image);
-        const formData = await decodeAndSendBase64Image(image);
+        if (!model) return;
+        const formData = await decodeAndSendBase64Image(image,model);
         const response = await getClassificationData(formData, model);
         console.log(response);
     };
