@@ -1,6 +1,5 @@
-import { CameraType } from '../../camera';
+import { CameraType } from '../../Camera';
 import * as React from "react";
-
 export interface ControlPanelPropsInterface {
     setActiveDeviceId: (id: string) => void;
     devices: MediaDeviceInfo[];
